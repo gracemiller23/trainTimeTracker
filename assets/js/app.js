@@ -67,8 +67,10 @@
         //Calculate next arrival and minutes away
         var aTime = moment(firstTime, "HH:mm");
         var unixTime = moment(aTime).unix();
+
+        var firstTimeUnix = unixTime - (tFrequency * 60)
     
-        var timesRun = ((currentTime - unixTime) / 60) / tFrequency  ;
+        var timesRun = ((currentTime - firstTimeUnix) / 60) / tFrequency  ;
        
         var minutesGone = (timesRun % 1) * tFrequency;
        
