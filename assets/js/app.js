@@ -12,14 +12,12 @@
 
     var database = firebase.database();
 
-
-
-
-
-
 //Pull info from form on submission and store in database
 
     $("#submit").on("click", function(){
+        var formEntryTime = $("#train-start-time-input").val().trim();
+        console.log(formEntryTime);
+        if (moment(formEntryTime, "HH:mm", true).isValid()){
         event.preventDefault();
 
         var trainName = $("#train-name-input").val().trim();
@@ -44,8 +42,11 @@
         database.ref().push(newTrain);
 
         alert("Train successfully added!");
-
+    }else{
+        alert("Enter a valid time in military format, for example, 2:00 pm is 14:00.");
+    };
     });
+    
 
 //Access train information in the database and add it as a new row to the table
 
@@ -64,15 +65,14 @@
         var tFrequency = childSnapshot.val().Frequency;
 
         //Calculate next arrival and minutes away
-        var aTime = moment(firstTime, "HH:mm a");
+        var aTime = moment(firstTime, "HH:mm");
         var unixTime = moment(aTime).unix();
     
         var timesRun = ((currentTime - unixTime) / 60) / tFrequency  ;
-
        
         var minutesGone = (timesRun % 1) * tFrequency;
        
-        var minutesAway = Math.round( (tFrequency - minutesGone) * 10 ) / 10;
+        var minutesAway = Math.ceil(tFrequency - minutesGone);
         console.log(minutesAway);
         var secondsAway = minutesAway * 60;
        
