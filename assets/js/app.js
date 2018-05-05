@@ -85,7 +85,7 @@
 
         //display all info on table
         $("#train-schedule").append(
-            "<tr> <td>" + tName + "</td>" + "<td>" + tDestination + "</td>" + "<td>" + tFrequency + "</td>" +
+            "<tr> <td>" + tName + "</td>" + "<td>" + tDestination + "</td>" + "<td> Every " + tFrequency + " min.</td>" +
             "<td>" + nextArrival + "</td>" + "<td>" + minutesAway + "</td> </tr>"
         )
 
