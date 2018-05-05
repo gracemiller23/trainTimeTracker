@@ -12,6 +12,11 @@
 
     var database = firebase.database();
 
+
+
+
+
+
 //Pull info from form on submission and store in database
 
     $("#submit").on("click", function(){
@@ -46,18 +51,37 @@
 
     database.ref().on("child_added", function(childSnapshot, prevChildKey){
 
+        //get the current time
+
+        var currentTime = moment().unix();
+        console.log(currentTime);
+
+        //get other variables from the database
+
         var tName = childSnapshot.val().Name;
         var tDestination = childSnapshot.val().Destination;
         var firstTime = childSnapshot.val().Start;
         var tFrequency = childSnapshot.val().Frequency;
 
-        console.log(tName, tDestination, firstTime, tFrequency);
-
         //Calculate next arrival and minutes away
-        var nextArrival = "Placeholder";
-        var minutesAway = "Placeholder";
+        var aTime = moment(firstTime, "HH:mm a");
+        var unixTime = moment(aTime).unix();
+    
+        var timesRun = ((currentTime - unixTime) / 60) / tFrequency  ;
 
+       
+        var minutesGone = (timesRun % 1) * tFrequency;
+       
+        var minutesAway = Math.round( (tFrequency - minutesGone) * 10 ) / 10;
+        console.log(minutesAway);
+        var secondsAway = minutesAway * 60;
+       
+        var nextUnixArrival = moment(currentTime + secondsAway);
+        
+        var nextArrival = moment.unix(nextUnixArrival).format("HH:mm");
+        console.log(nextArrival);
 
+        //display all info on table
         $("#train-schedule").append(
             "<tr> <td>" + tName + "</td>" + "<td>" + tDestination + "</td>" + "<td>" + tFrequency + "</td>" +
             "<td>" + nextArrival + "</td>" + "<td>" + minutesAway + "</td> </tr>"
